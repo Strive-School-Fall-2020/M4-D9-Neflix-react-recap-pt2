@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import { Navbar, Nav, InputGroup, FormControl, Button } from "react-bootstrap";
 
+import { withRouter } from "react-router-dom";
+
 class NetflixNavbar extends Component {
   state = { searchString: "" };
 
@@ -11,10 +13,16 @@ class NetflixNavbar extends Component {
   };
 
   searchStringHandler = (e) => {
-    this.setState({ searchString: e.currentTarget.value });
+    if (e.keyCode === 13 || e.key === "Enter") {
+      // WHEN ENTER KEY IS PRESSED
+      this.props.showSearchResult(this.state.searchString);
+    } else {
+      this.setState({ searchString: e.currentTarget.value });
+    }
   };
 
   render() {
+    console.log("nav props", this.props.location.pathname);
     return (
       <Navbar variant="dark" expand="lg" style={{ backgroundColor: "#221f1f" }}>
         <Navbar.Brand href="/">
@@ -30,7 +38,13 @@ class NetflixNavbar extends Component {
             <Nav.Link className="font-weight-bold" href="/">
               Home
             </Nav.Link>
-            <Nav.Link active className="font-weight-bold" href="/">
+            <Nav.Link
+              active={
+                this.props.location.pathname.includes("details") ? true : false
+              }
+              className="font-weight-bold"
+              href="/"
+            >
               TV Shows
             </Nav.Link>
             <Nav.Link className="font-weight-bold" href="/">
@@ -46,14 +60,16 @@ class NetflixNavbar extends Component {
           <span className="d-none d-md-flex align-items-center">
             <InputGroup className="icons">
               <FormControl
-                className="mr-3"
                 placeholder="Search and press enter"
                 aria-label="search"
                 aria-describedby="basic-addon1"
+                onKeyDown={this.searchStringHandler}
                 onChange={this.searchStringHandler}
                 value={this.state.searchString}
               />
-              <Button onClick={this.handleEnterKey}>Search</Button>
+              <InputGroup.Append>
+                <Button onClick={this.handleEnterKey}>Search</Button>
+              </InputGroup.Append>
             </InputGroup>
             <div id="kids mr-2">KIDS</div>
             <i className="fa fa-bell icons mr-2"></i>
@@ -64,4 +80,4 @@ class NetflixNavbar extends Component {
     );
   }
 }
-export default NetflixNavbar;
+export default withRouter(NetflixNavbar);

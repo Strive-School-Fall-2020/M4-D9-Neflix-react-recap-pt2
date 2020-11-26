@@ -3,7 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
+import Details from "./components/Details";
 import Footer from "./components/Footer";
+
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends React.Component {
   state = { searchedMovies: [], searchedLoading: null };
@@ -29,12 +32,28 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Navbar showSearchResult={this.showSearchResult} />
-        <Home
-          searchedMovies={this.state.searchedMovies}
-          searchedLoading={this.state.searchedLoading}
-        />
-        <Footer />
+        <Router>
+          <Navbar showSearchResult={this.showSearchResult} />
+          {/* <Home
+            searchedMovies={this.state.searchedMovies}
+            searchedLoading={this.state.searchedLoading}
+          /> */}
+
+          <Route
+            path="/"
+            exact
+            render={(props) => (
+              <Home
+                {...props}
+                searchedMovies={this.state.searchedMovies}
+                searchedLoading={this.state.searchedLoading}
+              />
+            )}
+          />
+          <Route path="/details" exact component={Details} />
+          <Route path="/details/:imdbID" component={Details} />
+          <Footer />
+        </Router>
       </div>
     );
   }

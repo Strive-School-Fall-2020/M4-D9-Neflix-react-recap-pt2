@@ -1,23 +1,10 @@
 import React from "react";
 import { Row, Col, Spinner } from "react-bootstrap";
 import Movie from "./Movie";
-import MovieModal from "./MovieModal";
 
 class Gallery extends React.Component {
-  state = { isModalOpen: false, selectedMovieID: null };
-
-  handleOpenModal = (imdbID) => {
-    this.setState({ isModalOpen: true, selectedMovieID: imdbID });
-
-    this.props.fetchComments(imdbID);
-  };
-
-  handleCloseModal = () => {
-    this.setState({ isModalOpen: false });
-  };
-
   render() {
-    const { title, movies, loading, selectedMovieID, comments } = this.props;
+    const { title, movies, loading } = this.props;
 
     return (
       <div>
@@ -36,15 +23,9 @@ class Gallery extends React.Component {
                   data={movie}
                   key={movie.imdbID}
                   // selectedMovieID={selectedMovieID}
-                  openModal={this.handleOpenModal}
+                  openModal={this.props.handleOpenModal}
                 />
               ))}
-              <MovieModal
-                isOpen={this.state.isModalOpen}
-                selectedMovieID={this.state.selectedMovieID}
-                comments={comments}
-                close={this.handleCloseModal}
-              />
             </>
           )}
         </Row>

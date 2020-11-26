@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Gallery from "./Gallery";
-import CommentListWithFetch from "./CommentListWithFetch";
+// import CommentListWithFetch from "./CommentListWithFetch";
 import { Alert, Button } from "react-bootstrap";
+import MovieModal from "./MovieModal";
 
 class Home extends Component {
   state = {
@@ -10,6 +11,8 @@ class Home extends Component {
     starWarsMovies: [],
     // selectedMovieID: null,
     comments: [],
+    isModalOpen: false,
+    selectedMovieID: null,
     loading: true,
     error: false,
   };
@@ -67,6 +70,16 @@ class Home extends Component {
     );
   };
 
+  handleOpenModal = (imdbID) => {
+    this.setState({ isModalOpen: true, selectedMovieID: imdbID });
+
+    this.fetchComments(imdbID);
+  };
+
+  handleCloseModal = () => {
+    this.setState({ isModalOpen: false });
+  };
+
   componentDidMount() {
     this.fetchMovies();
   }
@@ -107,7 +120,7 @@ class Home extends Component {
               </div>
             </div>
             <div className="d-none d-md-block">
-              <i className="fa fa-th-large icons"></i>
+              <i className="fa fa-th-large icons mr-2"></i>
               <i className="fa fa-th icons"></i>
             </div>
           </div>
@@ -136,6 +149,7 @@ class Home extends Component {
                 movies={this.props.searchedMovies}
                 comments={this.state.comments}
                 fetchComments={this.fetchComments}
+                handleOpenModal={this.handleOpenModal}
                 // selectedMovieID={this.handleSelectedMovie}
               />
             )}
@@ -150,6 +164,7 @@ class Home extends Component {
                   movies={this.state.spiderManMovies.slice(0, 6)}
                   comments={this.state.comments}
                   fetchComments={this.fetchComments}
+                  handleOpenModal={this.handleOpenModal}
                   // selectedMovieID={this.handleSelectedMovie}
                 />
                 <Gallery
@@ -158,6 +173,7 @@ class Home extends Component {
                   movies={this.state.starWarsMovies.slice(0, 6)}
                   comments={this.state.comments}
                   fetchComments={this.fetchComments}
+                  handleOpenModal={this.handleOpenModal}
                   // selectedMovieID={this.handleSelectedMovie}
                 />
                 <Gallery
@@ -166,10 +182,18 @@ class Home extends Component {
                   movies={this.state.harryPotterMovies.slice(0, 6)}
                   comments={this.state.comments}
                   fetchComments={this.fetchComments}
+                  handleOpenModal={this.handleOpenModal}
                   // selectedMovieID={this.handleSelectedMovie}
                 />
               </>
             )}
+          <MovieModal
+            isOpen={this.state.isModalOpen}
+            selectedMovieID={this.state.selectedMovieID}
+            comments={this.state.comments}
+            close={this.handleCloseModal}
+            fetchComments={this.fetchComments}
+          />
         </div>
       </div>
     );
