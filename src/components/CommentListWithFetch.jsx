@@ -24,6 +24,7 @@ class CommentListWithFetch extends Component {
     this.setState({ comments }, () =>
       console.log("awaited comments", this.state.comments)
     );
+
     //   .then((response) => response.json())
     //   .then((comments) => this.setState({ comments }));
   };
@@ -40,6 +41,10 @@ class CommentListWithFetch extends Component {
       console.log("actually different");
       this.fetchComments(this.props.imdbID);
     }
+  }
+
+  componentWillUnmount() {
+    console.log("unmounting comments");
   }
 
   render() {

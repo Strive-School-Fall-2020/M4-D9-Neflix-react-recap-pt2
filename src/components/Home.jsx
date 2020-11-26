@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import Gallery from "./Gallery";
 import CommentListWithFetch from "./CommentListWithFetch";
-import { Alert } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 
 class Home extends Component {
   state = {
     harryPotterMovies: [],
     spiderManMovies: [],
     starWarsMovies: [],
-    selectedMovieID: null,
+    // selectedMovieID: null,
+    comments: [],
     loading: true,
     error: false,
   };
@@ -45,6 +46,25 @@ class Home extends Component {
         this.setState({ error: true });
         console.log("An error has occurred:", err);
       });
+  };
+
+  fetchComments = async (movieID) => {
+    console.log("fetch", movieID);
+
+    const url = "https://striveschool-api.herokuapp.com/api/comments/";
+
+    let response = await fetch(url + movieID, {
+      headers: new Headers({
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmI2NmUzNTk4MzViMDAwMTc1ODRlZWQiLCJpYXQiOjE2MDU4MjA1NjUsImV4cCI6MTYwNzAzMDE2NX0.mgz_c-3UHAribI3ogIYDAyR7XqpT7ZWCzSPHwrhU19w",
+      }),
+    });
+
+    let comments = await response.json();
+
+    this.setState({ comments }, () =>
+      console.log("awaited comments", this.state.comments)
+    );
   };
 
   componentDidMount() {
@@ -92,9 +112,14 @@ class Home extends Component {
             </div>
           </div>
 
-          {this.state.selectedMovieID && (
-            <CommentListWithFetch imdbID={this.state.selectedMovieID} />
-          )}
+          {/* {this.state.selectedMovieID && (
+            <>
+              <CommentListWithFetch imdbID={this.state.selectedMovieID} />
+              <Button onClick={() => this.setState({ selectedMovieID: null })}>
+                Reset comments
+              </Button>
+            </>
+          )} */}
 
           {this.state.error && (
             <Alert variant="danger" className="text-center">
@@ -109,7 +134,9 @@ class Home extends Component {
                 title="Search Results"
                 loading={this.props.searchedLoading}
                 movies={this.props.searchedMovies}
-                selectedMovieID={this.handleSelectedMovie}
+                comments={this.state.comments}
+                fetchComments={this.fetchComments}
+                // selectedMovieID={this.handleSelectedMovie}
               />
             )}
 
@@ -121,19 +148,25 @@ class Home extends Component {
                   title="Spider Man"
                   loading={this.state.loading}
                   movies={this.state.spiderManMovies.slice(0, 6)}
-                  selectedMovieID={this.handleSelectedMovie}
+                  comments={this.state.comments}
+                  fetchComments={this.fetchComments}
+                  // selectedMovieID={this.handleSelectedMovie}
                 />
                 <Gallery
                   title="Star Wars"
                   loading={this.state.loading}
                   movies={this.state.starWarsMovies.slice(0, 6)}
-                  selectedMovieID={this.handleSelectedMovie}
+                  comments={this.state.comments}
+                  fetchComments={this.fetchComments}
+                  // selectedMovieID={this.handleSelectedMovie}
                 />
                 <Gallery
                   title="Harry Potter"
                   loading={this.state.loading}
                   movies={this.state.harryPotterMovies.slice(0, 6)}
-                  selectedMovieID={this.handleSelectedMovie}
+                  comments={this.state.comments}
+                  fetchComments={this.fetchComments}
+                  // selectedMovieID={this.handleSelectedMovie}
                 />
               </>
             )}

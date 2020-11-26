@@ -9,7 +9,7 @@ class Movie extends Component {
           className="img-fluid"
           src={this.props.data.Poster}
           alt="movie picture"
-          onClick={() => this.props.selectedMovieID(this.props.data.imdbID)}
+          onClick={() => this.props.openModal(this.props.data.imdbID)}
         />
       </Col>
     );
