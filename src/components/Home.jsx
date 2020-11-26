@@ -9,7 +9,6 @@ class Home extends Component {
     harryPotterMovies: [],
     spiderManMovies: [],
     starWarsMovies: [],
-    // selectedMovieID: null,
     comments: [],
     isModalOpen: false,
     selectedMovieID: null,
@@ -19,12 +18,8 @@ class Home extends Component {
 
   url = "http://www.omdbapi.com/?apikey=85a2b045";
 
-  handleSelectedMovie = (imdbID) => {
-    console.log("selected movie id changed", imdbID);
-    this.setState({ selectedMovieID: imdbID });
-  };
-
   fetchMovies = () => {
+    // resolves all the fetches in "parallel"
     Promise.all([
       fetch(this.url + "&s=harry%20potter")
         .then((response) => response.json())
@@ -52,7 +47,8 @@ class Home extends Component {
   };
 
   fetchComments = async (movieID) => {
-    console.log("fetch", movieID);
+    // performs a fetch for the comments based on the movieID that it receives when called
+    // the comments will then be passed into the Modal via props
 
     const url = "https://striveschool-api.herokuapp.com/api/comments/";
 
@@ -65,22 +61,23 @@ class Home extends Component {
 
     let comments = await response.json();
 
-    this.setState({ comments }, () =>
-      console.log("awaited comments", this.state.comments)
-    );
+    this.setState({ comments }); // updates state comments with newly fetched comments
   };
 
   handleOpenModal = (imdbID) => {
-    this.setState({ isModalOpen: true, selectedMovieID: imdbID });
+    this.setState({ isModalOpen: true, selectedMovieID: imdbID }); // triggers the open modal to true and saves the clicked elementId
 
+    //launches a new fetch when the modal is opening
     this.fetchComments(imdbID);
   };
 
   handleCloseModal = () => {
+    // turns the modal off
     this.setState({ isModalOpen: false });
   };
 
   componentDidMount() {
+    // performs an initial state when Home is mounted
     this.fetchMovies();
   }
 
@@ -125,6 +122,7 @@ class Home extends Component {
             </div>
           </div>
 
+          {/* EXAMPLE CommentsList with fetch inside */}
           {/* {this.state.selectedMovieID && (
             <>
               <CommentListWithFetch imdbID={this.state.selectedMovieID} />
@@ -134,65 +132,63 @@ class Home extends Component {
             </>
           )} */}
 
+          {/* Displays an Alert if there's an error in the fetches*/}
           {this.state.error && (
             <Alert variant="danger" className="text-center">
               An error has occurred, please try again later
             </Alert>
           )}
 
+          {/* Displays the 3 galleries if there's no error in the fetches*/}
           {!this.state.error &&
+            // and if we HAVE any searchedMovies in the App.js state
             (this.props.searchedMovies.length > 0 ||
+              // OR if the searchedLoading state in the App.js state is true so actually loading,
+              // we need to activate this component to render the loaders inside
               this.props.searchedLoading === true) && (
               <Gallery
                 title="Search Results"
                 loading={this.props.searchedLoading}
                 movies={this.props.searchedMovies}
-                comments={this.state.comments}
-                fetchComments={this.fetchComments}
                 handleOpenModal={this.handleOpenModal}
-                // selectedMovieID={this.handleSelectedMovie}
               />
             )}
 
+          {/* Displays the 3 galleries if there's no error in the fetches*/}
           {!this.state.error &&
+            // and if we DON'T HAVE any searchedMovies in the App.js state
             (!this.props.searchedMovies.length > 0 ||
+              // OR if the searchedLoading state in the App.js state is null, so the default state
               this.props.searchedLoading === null) && (
               <>
                 <Gallery
-                  title="Spider Man"
-                  loading={this.state.loading}
-                  movies={this.state.spiderManMovies.slice(0, 6)}
-                  comments={this.state.comments}
-                  fetchComments={this.fetchComments}
-                  handleOpenModal={this.handleOpenModal}
-                  // selectedMovieID={this.handleSelectedMovie}
+                  title="Spider Man" // the title of the gallery
+                  loading={this.state.loading} // manages the spinners
+                  movies={this.state.spiderManMovies.slice(0, 6)} // it's the movies array
+                  handleOpenModal={this.handleOpenModal} // let the Button in Movie open the modal outside
                 />
                 <Gallery
                   title="Star Wars"
                   loading={this.state.loading}
                   movies={this.state.starWarsMovies.slice(0, 6)}
-                  comments={this.state.comments}
-                  fetchComments={this.fetchComments}
                   handleOpenModal={this.handleOpenModal}
-                  // selectedMovieID={this.handleSelectedMovie}
                 />
                 <Gallery
                   title="Harry Potter"
                   loading={this.state.loading}
                   movies={this.state.harryPotterMovies.slice(0, 6)}
-                  comments={this.state.comments}
-                  fetchComments={this.fetchComments}
                   handleOpenModal={this.handleOpenModal}
-                  // selectedMovieID={this.handleSelectedMovie}
                 />
               </>
             )}
+
+          {/* 1 Single modal for all the cards */}
           <MovieModal
-            isOpen={this.state.isModalOpen}
-            selectedMovieID={this.state.selectedMovieID}
-            comments={this.state.comments}
-            close={this.handleCloseModal}
-            fetchComments={this.fetchComments}
+            isOpen={this.state.isModalOpen} // will tell the modal to be opened or closed
+            selectedMovieID={this.state.selectedMovieID} // used to assign the correct elementId to the POST payload obj
+            comments={this.state.comments} // passes the comments array to <CommentList />
+            close={this.handleCloseModal} // triggers the closure of the modal
+            fetchComments={this.fetchComments} // lets MovieModal call a fetch here (Home) via props
           />
         </div>
       </div>

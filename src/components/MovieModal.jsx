@@ -5,6 +5,7 @@ import CommentList from "./CommentList";
 
 class MovieModal extends Component {
   state = {
+    //default initial state
     newComment: {
       comment: "",
       rate: 0,
@@ -28,8 +29,11 @@ class MovieModal extends Component {
       });
 
       if (response.ok) {
+        //FETCHES AGAIN TO UPDATE THE COMMENTS DISPLAYED
+        //it will update the state.comments in Home and all the props connected to that state, so here and in CommentList
         this.props.fetchComments(this.props.selectedMovieID);
 
+        //RESETS THE STATE TO EMPTY THE FIELDS
         this.setState({
           newComment: {
             comment: "",
@@ -58,27 +62,18 @@ class MovieModal extends Component {
     this.setState({ newComment });
   };
 
-  setElementId = () => {
-    let newComment = { ...this.state.newComment };
-    newComment.elementId = this.props.selectedMovieID;
-    this.setState({ newComment });
-  };
-
-  //   componentDidMount() {
-  //     console.log(this.props.selectedMovieID);
-  //     this.setElementId();
-  //   }
-
+  // Sets elementId when a card is clicked, because a new selectedMovieID will come in.
   componentDidUpdate(prevProps) {
-    console.log("update", this.props.selectedMovieID);
+    // checking if the selectedMovieID prop has changes
     if (prevProps.selectedMovieID !== this.props.selectedMovieID) {
-      console.log("update inner", this.props.selectedMovieID);
-      this.setElementId();
+      // setting a new state
+      let newComment = this.state.newComment;
+      newComment.elementId = this.props.selectedMovieID;
+      this.setState({ newComment });
     }
   }
 
   render() {
-    console.log("movie id", this.props.selectedMovieID);
     return (
       <Modal show={this.props.isOpen} onHide={this.props.close}>
         <Modal.Header closeButton>

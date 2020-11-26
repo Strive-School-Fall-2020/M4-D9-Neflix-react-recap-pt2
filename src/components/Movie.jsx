@@ -10,11 +10,13 @@ class Movie extends Component {
           src={this.props.data.Poster}
           alt="movie picture"
           onClick={() =>
+            // changes the page to /details/{imdbID}
             this.props.history.push(`/details/${this.props.data.imdbID}`)
           }
         />
         <Button
           className="mx-2 mt-2"
+          // opens the modal by calling a function in the Home component
           onClick={() => this.props.openModal(this.props.data.imdbID)}
         >
           Open Modal

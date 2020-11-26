@@ -22,7 +22,7 @@ class Gallery extends React.Component {
                 <Movie
                   data={movie}
                   key={movie.imdbID}
-                  // selectedMovieID={selectedMovieID}
+                  //passes the reference of the outer handleOpenModal method
                   openModal={this.props.handleOpenModal}
                 />
               ))}

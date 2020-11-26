@@ -33,24 +33,24 @@ class App extends React.Component {
     return (
       <div className="App">
         <Router>
-          <Navbar showSearchResult={this.showSearchResult} />
-          {/* <Home
-            searchedMovies={this.state.searchedMovies}
-            searchedLoading={this.state.searchedLoading}
-          /> */}
 
+          {/* Navbar is able to change the state here via the showSearchResult method */}
+          <Navbar showSearchResult={this.showSearchResult} />
           <Route
             path="/"
             exact
+            //changes "component" with a "render" prop to spread the router props and ADD OUR OWN PROPS in the Home component
             render={(props) => (
               <Home
                 {...props}
+                // Home will receive the searchedMovies array and the boolean for triggering the loading on searchedMovies gallery
                 searchedMovies={this.state.searchedMovies}
                 searchedLoading={this.state.searchedLoading}
               />
             )}
           />
           <Route path="/details" exact component={Details} />
+          {/* A dynamic route is made with ":" -> "/:id" */}
           <Route path="/details/:imdbID" component={Details} />
           <Footer />
         </Router>

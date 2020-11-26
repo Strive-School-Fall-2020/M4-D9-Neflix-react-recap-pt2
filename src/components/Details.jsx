@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-
 import { Container, Row, Col, Image } from "react-bootstrap";
 import CommentList from "./CommentList";
-
-import { Link } from "react-router-dom";
 
 class Details extends Component {
   state = {
@@ -41,6 +38,7 @@ class Details extends Component {
   };
 
   componentDidMount() {
+    //Gets the imdbID from the router props
     this.fetchData(this.props.match.params.imdbID);
     this.fetchComments(this.props.match.params.imdbID);
   }

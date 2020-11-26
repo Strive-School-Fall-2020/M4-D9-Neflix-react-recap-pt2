@@ -7,8 +7,10 @@ import { withRouter } from "react-router-dom";
 class NetflixNavbar extends Component {
   state = { searchString: "" };
 
-  handleEnterKey = (e) => {
-    console.log(e.currentTarget.value);
+  //proves why a controlled input is useful:
+  handleEnterKey = () => {
+    // we can access the string of the input without having the e.currentTarget.value available here,
+    // we just need to save it in the state and access it from any point in our component
     this.props.showSearchResult(this.state.searchString);
   };
 
